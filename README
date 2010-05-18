@@ -1,0 +1,10 @@
+This is a Hudson-based build system for Titanium Mobile and Desktop.
+
+The basic configuration is:
+	- Tomcat 6 + Latest Hudson
+	- Git plugin
+	- Setup the ANDROID_SDK environment variable for Android build
+	- Setup AWS_KEY and AWS_SECRET environment variables for upload
+	- Point the mobile config at mobile/driver.sh
+	- Point the desktop config at desktop/driver.sh
+
