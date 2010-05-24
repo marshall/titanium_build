@@ -12,7 +12,7 @@ secret_key = sys.argv[2]
 type = sys.argv[3]
 
 conn = S3Connection(access_key, secret_key)
-bucket = conn.get_bucket('nightlies')
+bucket = conn.get_bucket('builds.appcelerator.com')
 
 keys = []
 for key in bucket.list(prefix=type):

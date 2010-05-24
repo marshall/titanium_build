@@ -17,7 +17,7 @@ build_url = sys.argv[6]
 filename = os.path.basename(path)
 
 conn = S3Connection(access_key, secret_key)
-bucket = conn.get_bucket('nightlies')
+bucket = conn.get_bucket('builds.appcelerator.com')
 key = Key(bucket)
 key.key = '%s/%s' % (type, filename)
 key.set_metadata('git_revision', revision)
