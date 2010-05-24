@@ -2,8 +2,7 @@
 
 # A hudson build driver for Titanium Desktop
 export PATH=/bin:/usr/bin:$PATH
-GIT_REVISION=`git log --pretty=oneline -n 1 | sed 's/\s.*//' | tr -d '\r' | tr -d '\n'`
-GIT_REVISION=${GIT_REVISION:0:8}
+GIT_REVISION=`git log --pretty=oneline -n 1 | sed 's/ .*//' | tr -d '\r' | tr -d '\n'`
 VERSION=`python -c 'import sdk; print sdk.get_titanium_version()' | tr -d '\r' | tr -d '\n'`
 PLATFORM=`python -c "import platform; print ({'Darwin':'osx','Windows':'win32','Linux':'linux'})[platform.system()]" | tr -d '\r' | tr -d '\n'`
 TIMESTAMP=`date +'%Y%m%d%H%M%S'`
@@ -31,4 +30,4 @@ TIMESTAMP_NAME=build/$PLATFORM/dist/sdk-$VERSION-$TIMESTAMP-$PLATFORM.zip
 mv build/$PLATFORM/dist/sdk-$VERSION.zip $TIMESTAMP_NAME
 
 python $TITANIUM_BUILD/common/s3_cleaner.py $AWS_KEY $AWS_SECRET desktop
-python $TITANIUM_BUILD/common/s3_uploader.py $AWS_KEY $AWS_SECRET desktop $TIMESTAMP_NAME
+python $TITANIUM_BUILD/common/s3_uploader.py $AWS_KEY $AWS_SECRET desktop $TIMESTAMP_NAME $GIT_REVISION $BUILD_URL
