@@ -21,7 +21,7 @@ fi
 
 # force kroll onto master for now
 cd kroll && git checkout master && git pull && cd ../
-scons -j 4 debug=1 breakpad=0 drillbit dist
+scons -j $NUM_CPUS debug=1 breakpad=0 drillbit dist || exit
 ./build/$PLATFORM/$DRILLBIT_APP/$DRILLBIT_EXE --autorun --autoclose
 
 mkdir -p drillbit_results
