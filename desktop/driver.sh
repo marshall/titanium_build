@@ -27,7 +27,7 @@ scons -j $NUM_CPUS debug=1 breakpad=0 drillbit dist || exit
 mkdir -p drillbit_results
 $TITANIUM_BUILD/desktop/drillbit_collector.py > drillbit_results/index.html
 
-TIMSTAMP_NAME=build/$PLATFORM/dist/sdk-$VERSION-$TIMESTAMP-$PLATFORM.zip
+TIMESTAMP_NAME=build/$PLATFORM/dist/sdk-$VERSION-$TIMESTAMP-$PLATFORM.zip
 mv build/$PLATFORM/dist/sdk-$VERSION-$PLATFORM.zip $TIMESTAMP_NAME
 
 python $TITANIUM_BUILD/common/s3_cleaner.py $AWS_KEY $AWS_SECRET desktop
