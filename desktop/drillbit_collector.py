@@ -26,6 +26,8 @@ def get_results(suite, json):
 		if json["failed"] > 0:
 			for result in json["results"]:
 				if not result["passed"]:
+					if 'lineNumber' not in result:
+						result['lineNumber'] = '(n/a)'
 					failures.append(result)
 
 for file in os.listdir(test_results_dir):
@@ -38,6 +40,7 @@ data = {"total_success":total_success,"total_failed":total_failed,"total":total,
 
 failures_html = "<hr/>"
 for failure in failures:
+	print "%s" % failure
 	failures_html += "<span class=\"failure\"><b>%s</b><br/>line %s: %s</span><hr/>\n" % (failure["name"], failure["lineNumber"], failure["message"])
 
 html = """
