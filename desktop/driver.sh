@@ -2,6 +2,8 @@
 
 # A hudson build driver for Titanium Desktop
 export PATH=/bin:/usr/bin:$PATH
+
+cd $WORKSPACE
 GIT_REVISION=`git log --pretty=oneline -n 1 | sed 's/ .*//' | tr -d '\r' | tr -d '\n'`
 VERSION=`python -c 'import sdk; print sdk.get_titanium_version()' | tr -d '\r' | tr -d '\n'`
 PLATFORM=`python -c "import platform; print ({'Darwin':'osx','Windows':'win32','Linux':'linux'})[platform.system()]" | tr -d '\r' | tr -d '\n'`
