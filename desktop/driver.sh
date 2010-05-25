@@ -29,5 +29,6 @@ $TITANIUM_BUILD/desktop/drillbit_collector.py > drillbit_results/index.html
 TIMESTAMP_NAME=build/$PLATFORM/dist/sdk-$VERSION-$TIMESTAMP-$PLATFORM.zip
 mv build/$PLATFORM/dist/sdk-$VERSION.zip $TIMESTAMP_NAME
 
+SHA1=`shasum $TIMESTAMP_NAME | sed 's/ .*//' | tr -d '\n' | tr -d '\r'`
 python $TITANIUM_BUILD/common/s3_cleaner.py $AWS_KEY $AWS_SECRET desktop
-python $TITANIUM_BUILD/common/s3_uploader.py $AWS_KEY $AWS_SECRET desktop $TIMESTAMP_NAME $GIT_REVISION $BUILD_URL
+python $TITANIUM_BUILD/common/s3_uploader.py $AWS_KEY $AWS_SECRET desktop $TIMESTAMP_NAME $GIT_REVISION $BUILD_URL $SHA1
