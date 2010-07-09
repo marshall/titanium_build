@@ -17,6 +17,7 @@ sha1 = sys.argv[7]
 
 filename = os.path.basename(path)
 
+print 'uploading %s...' % filename
 conn = S3Connection(access_key, secret_key)
 bucket = conn.get_bucket('builds.appcelerator.com')
 key = Key(bucket)
@@ -27,3 +28,16 @@ key.set_metadata('build_type', type)
 key.set_metadata('sha1', sha1)
 key.set_contents_from_filename(path)
 key.make_public()
+
+print 'updating %s/index.json..' % type
+index_key = bucket.get_key('%s/index.json' % type)
+index = []
+if index_key == None:
+	index_key = Key(bucket)
+	key.key = '%s/index.json' % type
+else:
+	index = simplejson.loads(index_key.get_contents_as_string())
+
+index.append({ 'filename': filename, 'git_revision': revision, 'build_url': build_url, 'build_type': type, 'sha1': sha1 })
+index_key.set_contents_from_string(simplejson.dumps(index))
+index_key.make_public()

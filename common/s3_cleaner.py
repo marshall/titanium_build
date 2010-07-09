@@ -2,6 +2,7 @@
 import os, sys, boto
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
+import simplejson
 
 if len(sys.argv) != 4:
 	print "Usage: %s <AWS Access Key> <AWS Secret Key> <desktop|mobile>" % sys.argv[0]
@@ -16,7 +17,7 @@ bucket = conn.get_bucket('builds.appcelerator.com')
 
 keys = []
 for key in bucket.list(prefix=type):
-	if key.name != type and key.name != type+'/':
+	if key.name != type and key.name != type+'/' and key.name != type+'/index.json':
 		keys.append(key)
 
 cleaned = 0
@@ -28,5 +29,13 @@ if (len(keys) > 15):
 		print 'deleting ' + str(keys[i])
 		key.delete()
 		cleaned += 1
+
+# maintain the index JSON
+index_key = bucket.get_key('%s/index.json' % type)
+if index_key != None:
+	print 'removing %d items from index.json...' % cleaned
+	index = simplejson.loads(index_key.get_contents_as_string())
+	index = index[cleaned:]
+	index_key.set_contents_from_string(simplejson.dumps(index))
 
 print "Cleaned %d binaries from S3" % cleaned
