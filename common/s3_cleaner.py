@@ -35,14 +35,14 @@ if (len(keys) > 15):
 # maintain the index JSON
 index_key = bucket.get_key('%s/index.json' % type)
 if index_key != None:
-	print 'removing %d items from index.json...' % cleaned
 	index = simplejson.loads(index_key.get_contents_as_string())
 	objects_to_remove = []
 	for key in deleted_keys:
 		for obj in index:
 			if key == '%s/%s' % (type, obj['filename']):
-				indexes_to_remove.append(obj)
+				objects_to_remove.append(obj)
 
+	print 'removing %d items from index.json...' % len(objects_to_remove)
 	for obj in objects_to_remove:
 		index.remove(obj)
 
