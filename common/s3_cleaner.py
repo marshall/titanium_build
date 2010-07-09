@@ -16,15 +16,16 @@ bucket = conn.get_bucket('builds.appcelerator.com')
 
 keys = []
 for key in bucket.list(prefix=type):
-	if key.name != type:
+	if key.name != type and key.name != type+'/':
 		keys.append(key)
 
 cleaned = 0
 if (len(keys) > 15):
 	# only keep the last 5 builds * 3 platforms = 15 files
 	keys.sort(lambda a,b: cmp(a.last_modified, b.last_modified))
-	for i in range(15, len(keys)):
+	for i in range(0, len(keys)-15):
 		key = keys[i]
+		print 'deleting ' + str(keys[i])
 		key.delete()
 		cleaned += 1
 
