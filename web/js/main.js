@@ -21,7 +21,7 @@ $(document).ready(function() {
 		var shortRevision = revision.substring(0,8);
 		var row = $('<tr/>').addClass('revision')
 			.append($('<th/>')
-					.append(date)
+					.append(date.format('mmm d yyyy HH:MM') + " ")
 					.append($('<a/>').attr('href', url).text('r'+shortRevision)))
 			.append($('<th/>').text('Size'))
 		$('#'+type+'_table').append(row);
@@ -45,6 +45,7 @@ $(document).ready(function() {
 			.append($('<td/>')
 				.append($('<img/>').attr('src', 'images/'+platform+'.png'))
 				.append($('<a/>').attr('href', fileUrl).text(platformDesc))
+				.append($('<div/>').addClass('sha1').text('filename: '+file.filename))
 				.append($('<div/>').addClass('sha1').text('sha1: '+file.sha1)))
 			.append($('<td/>').text(size));
 		$('#'+type+'_table').append(row);
