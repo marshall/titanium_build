@@ -17,6 +17,7 @@ build_url = sys.argv[6]
 sha1 = sys.argv[7]
 
 filename = os.path.basename(path)
+filesize = os.path.getsize(path)
 
 print 'uploading %s...' % filename
 conn = S3Connection(access_key, secret_key)
@@ -39,6 +40,6 @@ if index_key == None:
 else:
 	index = simplejson.loads(index_key.get_contents_as_string())
 
-index.append({ 'filename': filename, 'git_revision': revision, 'build_url': build_url, 'build_type': type, 'sha1': sha1 })
+index.append({ 'filename': filename, 'git_revision': revision, 'build_url': build_url, 'build_type': type, 'sha1': sha1, 'size': filesize })
 index_key.set_contents_from_string(simplejson.dumps(index))
 index_key.make_public()
