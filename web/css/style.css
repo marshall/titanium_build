@@ -1,0 +1,94 @@
+
+body {
+	padding: 0px;
+	margin: 0px;
+	background: url("../img/grain.gif") repeat scroll center 0 transparent;
+}
+
+#header {
+	background-repeat: none;
+	background-position: top left;
+	background-color: #9A0707;
+	height: 50px;
+	margin: 0px;
+	padding: 10px;
+}
+
+#header_content {
+	font-size: 18px;
+	font-weight: bold;
+	color: white;
+	position: absolute;
+	top: 20px;
+	left: 190px;
+}
+
+table {
+	padding: 0px;
+	margin: 0px;
+	border: 1px solid #999999;
+	margin-top: 10px;
+}
+
+table tr {
+	border-bottom:1px solid #DDDDDD;
+}
+
+table tr:last-child {
+	border-bottom:medium none !important;
+}
+
+#mobile_download_table {
+	position: absolute;
+	top: 75px;
+	width: 49%;
+	float: left;
+	font-size: 20px;
+	font-weight: bold;
+	padding: 0px;
+}
+
+#mobile_download_table img {
+	text-align: middle;
+	float: left;
+}
+
+#desktop_download_table {
+	position: absolute;
+	top: 75px;
+	right: 10px;
+	width: 49%;
+	float: right;
+	font-size: 20px;
+	font-weight: bold;
+	padding: 0px;
+}
+
+#desktop_download_table img {
+	text-align: middle;
+	float: left;
+}
+
+td {
+	font-size: 14px;
+}
+
+.revision {
+	background-color: #ccc;
+	font-size: 14px;
+	color: black;
+	padding: 0px;
+	margin: 0px;
+}
+
+.revision th {
+	padding: 0px;
+	margin: 5px;
+}
+
+.sha1 {
+	font-size: 10px;
+	font-weight: bold;
+	color: #666;
+	margin-left: 5px;
+}
