@@ -2,6 +2,7 @@
 import sys, os
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
+import simplejson
 
 if len(sys.argv) != 8:
 	print "Usage: %s <AWS Access Key> <AWS Secret Key> <desktop|mobile> <path> <revision> <build url> <sha1>" % sys.argv[0]

@@ -23,10 +23,11 @@ fi
 # force kroll onto master for now
 cd kroll && git checkout master && git pull && cd ../
 scons -j $NUM_CPUS debug=1 breakpad=0 drillbit dist || exit
-./build/$PLATFORM/$DRILLBIT_APP/$DRILLBIT_EXE --autorun --autoclose
 
-mkdir -p drillbit_results
-$TITANIUM_BUILD/desktop/drillbit_collector.py > drillbit_results/index.html
+# TODO: re-enable drillbit tests
+# ./build/$PLATFORM/$DRILLBIT_APP/$DRILLBIT_EXE --autorun --autoclose
+# mkdir -p drillbit_results
+# $TITANIUM_BUILD/desktop/drillbit_collector.py > drillbit_results/index.html
 
 TIMESTAMP_NAME=build/$PLATFORM/dist/sdk-$VERSION-$TIMESTAMP-$PLATFORM.zip
 mv build/$PLATFORM/dist/sdk-$VERSION.zip $TIMESTAMP_NAME
