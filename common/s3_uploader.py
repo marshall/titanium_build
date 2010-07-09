@@ -35,7 +35,7 @@ index_key = bucket.get_key('%s/index.json' % type)
 index = []
 if index_key == None:
 	index_key = Key(bucket)
-	key.key = '%s/index.json' % type
+	index_key.key = '%s/index.json' % type
 else:
 	index = simplejson.loads(index_key.get_contents_as_string())
 
