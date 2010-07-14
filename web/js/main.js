@@ -53,6 +53,7 @@ $(document).ready(function() {
 	
 	function loadTable(type, data) {
 		var revisions = {};
+		var revisionIndexes = [];
 		for (var i = 0; i < data.length; i++) {
 			var file = data[i];
 			var timestamp = file.filename.split("-")[2];
@@ -69,11 +70,26 @@ $(document).ready(function() {
 			}
 			revisions[revision].push(file);
 		}
-		
+
+		var i = 0;
 		$.each(revisions, function(revision, files) {
-			appendRevision(type, revision, files);
+			revisionIndexes[i++] = revision;
+		});
+
+		revisionIndexes.sort(function(a, b) {
+			return revisions[a][0].date - revisions[b][0].date;
+		});
+		revisionIndexes.reverse();
+		
+		$.each(revisionIndexes, function(index, revision) {
+			appendRevision(type, revision, revisions[revision]);
 		});
 	}
+	
+	$('body').ajaxError(function(event, xhr, settings, exception) {
+		var type = settings.url.substring(0, settings.url.lastIndexOf('/'));
+		$('#'+type+'_table').html('<tr><td>No builds found</td></tr>');
+	});
 	
 	$.getJSON('mobile/index.json', function(data) {
 		loadTable('mobile', data);
