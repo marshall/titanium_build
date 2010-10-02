@@ -1,45 +1,63 @@
 #!/usr/bin/python
-import sys, os
+import sys, os, socket
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 import simplejson
 
-if len(sys.argv) != 8:
-	print "Usage: %s <AWS Access Key> <AWS Secret Key> <desktop|mobile> <path> <revision> <build url> <sha1>" % sys.argv[0]
+if len(sys.argv) != 9:
+	print "Usage: %s <AWS Access Key> <AWS Secret Key> <desktop|mobile> <path> <branch> <revision> <build url> <sha1>" % sys.argv[0]
 	sys.exit(1)
 
 access_key = sys.argv[1]
 secret_key = sys.argv[2]
 type = sys.argv[3]
 path = sys.argv[4]
-revision = sys.argv[5]
-build_url = sys.argv[6]
-sha1 = sys.argv[7]
+branch = sys.argv[5]
+revision = sys.argv[6]
+build_url = sys.argv[7]
+sha1 = sys.argv[8]
 
 filename = os.path.basename(path)
 filesize = os.path.getsize(path)
 
-print 'uploading %s...' % filename
+print 'uploading %s (branch %s / revision %s)...' % (filename, branch, revision)
 conn = S3Connection(access_key, secret_key)
 bucket = conn.get_bucket('builds.appcelerator.com')
 key = Key(bucket)
-key.key = '%s/%s' % (type, filename)
+key.key = '%s/%s/%s' % (type, branch, filename)
 key.set_metadata('git_revision', revision)
+key.set_metadata('git_branch', branch)
 key.set_metadata('build_url', build_url)
 key.set_metadata('build_type', type)
 key.set_metadata('sha1', sha1)
-key.set_contents_from_filename(path)
+
+max_retries = 5
+uploaded = False
+for i in range(1, max_retries+1):
+	try:
+		key.set_contents_from_filename(path)
+		print "-> succesfully uploaded on attempt #%d" % i
+		uploaded = True
+		break
+	except socket.error, e:
+		if i <= max_retries:
+			print '-> received error: %s, retrying upload (attempt #%d)...' % (str(e), i+1)
+
+if not uploaded:
+	print >>sys.stderr, "Failed to upload %s after %d attempts" % (path, max_retries)
+	sys.exit(1)
+
 key.make_public()
 
-print 'updating %s/index.json..' % type
-index_key = bucket.get_key('%s/index.json' % type)
+print 'updating %s/%s/index.json..' % (type, branch)
+index_key = bucket.get_key('%s/%s/index.json' % (type, branch))
 index = []
 if index_key == None:
 	index_key = Key(bucket)
-	index_key.key = '%s/index.json' % type
+	index_key.key = '%s/%s/index.json' % (type, branch)
 else:
 	index = simplejson.loads(index_key.get_contents_as_string())
 
-index.append({ 'filename': filename, 'git_revision': revision, 'build_url': build_url, 'build_type': type, 'sha1': sha1, 'size': filesize })
+index.append({ 'filename': filename, 'git_branch': branch, 'git_revision': revision, 'build_url': build_url, 'build_type': type, 'sha1': sha1, 'size': filesize })
 index_key.set_contents_from_string(simplejson.dumps(index))
 index_key.make_public()

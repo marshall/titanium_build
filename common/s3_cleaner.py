@@ -4,20 +4,22 @@ from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 import simplejson
 
-if len(sys.argv) != 4:
-	print "Usage: %s <AWS Access Key> <AWS Secret Key> <desktop|mobile>" % sys.argv[0]
+if len(sys.argv) != 5:
+	print "Usage: %s <AWS Access Key> <AWS Secret Key> <desktop|mobile> <branch>" % sys.argv[0]
 	sys.exit(1)
 
 access_key = sys.argv[1]
 secret_key = sys.argv[2]
 type = sys.argv[3]
+branch = sys.argv[4]
 
 conn = S3Connection(access_key, secret_key)
 bucket = conn.get_bucket('builds.appcelerator.com')
 
 keys = []
-for key in bucket.list(prefix=type):
-	if key.name != type and key.name != type+'/' and key.name != type+'/index.json':
+prefix = type+'/'+branch
+for key in bucket.list(prefix=prefix):
+	if key.name != prefix and key.name != prefix+'/' and key.name != prefix+'/index.json':
 		keys.append(key)
 
 cleaned = 0
@@ -33,13 +35,13 @@ if (len(keys) > 15):
 		cleaned += 1
 
 # maintain the index JSON
-index_key = bucket.get_key('%s/index.json' % type)
+index_key = bucket.get_key('%s/index.json' % prefix)
 if index_key != None:
 	index = simplejson.loads(index_key.get_contents_as_string())
 	objects_to_remove = []
 	for key in deleted_keys:
 		for obj in index:
-			if key == '%s/%s' % (type, obj['filename']):
+			if key == '%s/%s' % (prefix, obj['filename']):
 				objects_to_remove.append(obj)
 
 	print 'removing %d items from index.json...' % len(objects_to_remove)

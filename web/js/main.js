@@ -51,6 +51,27 @@ $(document).ready(function() {
 		$('#'+type+'_table').append(row);
 	}
 	
+	function loadBranches(type, branches) {
+		var select = $('#'+type+'_branch');
+		select.empty();
+		select.attr('disabled', null);
+		$.each(branches, function(index, branch) {
+			var option = $('<option></option>').attr('value', branch).text(branch);
+			if (branch == "master") {
+				$(option).attr("selected", "selected");
+			}
+			select.append(option);
+		});
+		select.change(function() {
+			var branch = select.val();
+			var table = $('#'+type+'_table');
+			table.empty();
+			$.getJSON(type+'/'+branch+'/index.json', function(data) {
+				loadTable(type, data);
+			});
+		});
+	}
+	
 	function loadTable(type, data) {
 		var revisions = {};
 		var revisionIndexes = [];
@@ -90,11 +111,18 @@ $(document).ready(function() {
 		var type = settings.url.substring(0, settings.url.lastIndexOf('/'));
 		$('#'+type+'_table').html('<tr><td>No builds found</td></tr>');
 	});
-	
-	$.getJSON('mobile/index.json', function(data) {
+
+	// master is the default branch	
+	$.getJSON("mobile/branches.json", function(data) {
+		loadBranches('mobile', data);
+	});
+	$.getJSON('mobile/master/index.json', function(data) {
 		loadTable('mobile', data);
 	});
-	$.getJSON('desktop/index.json', function(data) {
+	$.getJSON("desktop/branches.json", function(data) {
+		loadBranches('desktop', data);
+	});
+	$.getJSON('desktop/master/index.json', function(data) {
 		loadTable('desktop', data);
 	})
 });
