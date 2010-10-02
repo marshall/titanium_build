@@ -8,7 +8,7 @@ if len(sys.argv) != 6:
 	print "Usage: %s <desktop|mobile> <path> <branch> <revision> <build url>" % sys.argv[0]
 	sys.exit(1)
 
-(type, path, branch, revision, build_url) = sys.argv
+(type, path, branch, revision, build_url) = sys.argv[1:]
 
 cfg = utils.get_build_config()
 if not cfg.verify_aws():

@@ -8,7 +8,7 @@ if len(sys.argv) != 3:
 	print "Usage: %s <desktop|mobile> <branch>" % sys.argv[0]
 	sys.exit(1)
 
-(type, branch) = sys.argv
+(type, branch) = sys.argv[1:]
 cfg = utils.get_build_config()
 if not cfg.verify_aws():
 	print "Error: Need both AWS_KEY and AWS_SECRET in the environment or config.json"
