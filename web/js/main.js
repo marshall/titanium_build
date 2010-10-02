@@ -38,9 +38,11 @@ $(document).ready(function() {
 	
 	function appendFile(type, revision, file) {
 		var platform = getPlatform(file);
+		var branch = file.git_branch;
 		var platformDesc = descriptions[type][platform];
 		var size = "" + Math.round(file.size/1024.0/1024.0*100.0)/100.0 + " MB";
-		var fileUrl = 'http://builds.appcelerator.com.s3.amazonaws.com/' + type + '/' + file.filename;
+		var fileUrl = 'http://builds.appcelerator.com.s3.amazonaws.com/'
+			+ type + '/' + branch + '/' + file.filename;
 		var row = $('<tr/>')
 			.append($('<td/>')
 				.append($('<img/>').attr('src', 'images/'+platform+'.png'))
