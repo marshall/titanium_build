@@ -3,8 +3,32 @@ This is a Hudson-based build system for Titanium Mobile and Desktop.
 The basic configuration is:
 	- Tomcat 6 + Latest Hudson
 	- Git plugin
-	- Setup the ANDROID_SDK environment variable for Android build
-	- Setup AWS_KEY and AWS_SECRET environment variables for upload
+	- Set the ANDROID_SDK environment variable to the top level path of the Android SDK
+	- Setup config properties (see below)
 	- Point the mobile config at mobile/driver.sh
 	- Point the desktop config at desktop/driver.sh
 
+If you make any changes to the web interface, make sure to upload the changes by using:
+	./tools/web_updater.py
+
+To manage branch builds shown in the web interface:
+	- Add a branch build:
+		./tools/branch_builds.py add (mobile|desktop) <branch>
+	- Remove a branch build:
+		./tools/branch_builds.py remove (mobile|desktop) <branch>
+	- List currently visible branch builds:
+		./tools/branch_builds.py list (mobile|desktop)
+	
+Config properties
+-----------------
+
+This build accepts properties either as environment variables, or from the "config.json" file at the top of the build tree. Currently accepted properties are:
+
+- AWS_KEY (required)
+ The Amazon Web Services key for uploading S3 Content
+
+- AWS_SECRET (required)
+ The Amazon Web Services secret key for uploading S3 Content
+
+- UPLOAD_BUCKET (required)
+ The bucket in which to upload builds, the JSON indexes, and web content

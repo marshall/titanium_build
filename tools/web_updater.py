@@ -1,20 +1,21 @@
 #!/usr/bin/env python
-
 import sys, os
+build_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+common_dir = os.path.join(build_dir, 'common')
+sys.path.append(common_dir)
+
+import utils
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 import simplejson
 
-if len(sys.argv) != 3:
-	print "Usage: %s <AWS Access Key> <AWS Secret Key>" % sys.argv[0]
+cfg = utils.get_build_config()
+if not cfg.verify_aws():
+	print "Error: Need both AWS_KEY and AWS_SECRET in the environment or config.json"
 	sys.exit(1)
 
-access_key = sys.argv[1]
-secret_key = sys.argv[2]
-
 print 'publishing changes to builds.appcelerator.com s3 site...'
-conn = S3Connection(access_key, secret_key)
-bucket = conn.get_bucket('builds.appcelerator.com')
+bucket = cfg.open_bucket()
 
 web_dir = os.path.join(os.path.dirname(os.path.abspath(os.path.dirname(__file__))), 'web')
 for root, dirs, files in os.walk(web_dir):

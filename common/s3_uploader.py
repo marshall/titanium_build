@@ -1,28 +1,27 @@
 #!/usr/bin/python
-import sys, os, socket
+import sys, os, socket, utils
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 import simplejson
 
-if len(sys.argv) != 9:
-	print "Usage: %s <AWS Access Key> <AWS Secret Key> <desktop|mobile> <path> <branch> <revision> <build url> <sha1>" % sys.argv[0]
+if len(sys.argv) != 6:
+	print "Usage: %s <desktop|mobile> <path> <branch> <revision> <build url>" % sys.argv[0]
 	sys.exit(1)
 
-access_key = sys.argv[1]
-secret_key = sys.argv[2]
-type = sys.argv[3]
-path = sys.argv[4]
-branch = sys.argv[5]
-revision = sys.argv[6]
-build_url = sys.argv[7]
-sha1 = sys.argv[8]
+(type, path, branch, revision, build_url) = sys.argv
 
+cfg = utils.get_build_config()
+if not cfg.verify_aws():
+	print "Error: Need both AWS_KEY and AWS_SECRET in the environment or config.json"
+	sys.exit(1)
+	
+bucket = cfg.open_bucket()
+
+sha1 = utils.shasum(path)
 filename = os.path.basename(path)
 filesize = os.path.getsize(path)
 
 print 'uploading %s (branch %s / revision %s)...' % (filename, branch, revision)
-conn = S3Connection(access_key, secret_key)
-bucket = conn.get_bucket('builds.appcelerator.com')
 key = Key(bucket)
 key.key = '%s/%s/%s' % (type, branch, filename)
 key.set_metadata('git_revision', revision)

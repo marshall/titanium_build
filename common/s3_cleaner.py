@@ -1,20 +1,20 @@
 #!/usr/bin/python
-import os, sys, boto
+import os, sys, boto, utils
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 import simplejson
 
-if len(sys.argv) != 5:
-	print "Usage: %s <AWS Access Key> <AWS Secret Key> <desktop|mobile> <branch>" % sys.argv[0]
+if len(sys.argv) != 3:
+	print "Usage: %s <desktop|mobile> <branch>" % sys.argv[0]
 	sys.exit(1)
 
-access_key = sys.argv[1]
-secret_key = sys.argv[2]
-type = sys.argv[3]
-branch = sys.argv[4]
+(type, branch) = sys.argv
+cfg = utils.get_build_config()
+if not cfg.verify_aws():
+	print "Error: Need both AWS_KEY and AWS_SECRET in the environment or config.json"
+	sys.exit(1)
 
-conn = S3Connection(access_key, secret_key)
-bucket = conn.get_bucket('builds.appcelerator.com')
+bucket = cfg.open_bucket()
 
 keys = []
 prefix = type+'/'+branch
