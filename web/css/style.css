@@ -3,6 +3,7 @@ body {
 	padding: 0px;
 	margin: 0px;
 	background: url("../img/grain.gif") repeat scroll center 0 transparent;
+	font-family: "Trebuchet MS", "Tahoma";
 }
 
 #header {
@@ -38,13 +39,18 @@ table tr:last-child {
 	border-bottom:medium none !important;
 }
 
+.build_header {
+	font-size: 22px;
+	font-weight: bold;
+	margin-right: 20px;
+}
+
 #mobile_download_table {
 	position: absolute;
 	top: 75px;
 	width: 49%;
 	float: left;
-	font-size: 20px;
-	font-weight: bold;
+	font-size: 14px;
 	padding: 0px;
 }
 
@@ -59,8 +65,7 @@ table tr:last-child {
 	right: 10px;
 	width: 49%;
 	float: right;
-	font-size: 20px;
-	font-weight: bold;
+	font-size: 14px;
 	padding: 0px;
 }
 

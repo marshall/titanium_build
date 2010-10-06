@@ -43,21 +43,21 @@ def shasum(path):
 	out = Popen(['shasum', path], stdout=PIPE).communicate()[0]
 	return re.split(r' *', out.rstrip())[0]
 
-def get_key_json_array(bucket, key):
-	array = []
+def get_key_json_object(bucket, key, default=None):
 	key_obj = bucket.get_key(key)
 	if key_obj == None:
 		key_obj = Key(bucket)
 		key_obj.key = key
 	else:
-		array = simplejson.loads(key_obj.get_contents_as_string())
-	return array
+		return simplejson.loads(key_obj.get_contents_as_string())
+	if default == None: return {}
+	else: return default
 
-def set_key_json_array(bucket, key, array):
+def set_key_json_object(bucket, key, object):
 	key_obj = bucket.get_key(key)
 	if key_obj == None:
 		key_obj = Key(bucket)
 		key_obj.key = key
 
-	key_obj.set_contents_from_string(simplejson.dumps(array))
+	key_obj.set_contents_from_string(simplejson.dumps(object))
 	key_obj.make_public()

@@ -47,7 +47,7 @@ class JSONObject(object):
 
 bucket = cfg.open_bucket()
 index_key = '%s/%s/index.json' % (type, branch)
-index = JSONObject(utils.get_key_json_array(bucket, index_key))
+index = JSONObject(utils.get_key_json_object(bucket, index_key, default=[]))
 
 if expression == None:
 	print str(index)
