@@ -38,7 +38,7 @@ $(document).ready(function() {
 	
 	function appendFile(type, revision, file) {
 		var platform = getPlatform(file);
-		var branch = file.git_branch;
+		var branch = file.git_branch || 'master';
 		var platformDesc = descriptions[type][platform];
 		var size = "" + Math.round(file.size/1024.0/1024.0*100.0)/100.0 + " MB";
 		var fileUrl = 'http://builds.appcelerator.com.s3.amazonaws.com/'
