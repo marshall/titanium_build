@@ -9,6 +9,9 @@ GIT_REVISION=`git log --pretty=oneline -n 1 | sed 's/ .*//' | tr -d '\r' | tr -d
 VERSION=`python -c 'import sdk; print sdk.get_titanium_version()' | tr -d '\r' | tr -d '\n'`
 PLATFORM=`python -c "import platform; print ({'Darwin':'osx','Windows':'win32','Linux':'linux'})[platform.system()]" | tr -d '\r' | tr -d '\n'`
 TIMESTAMP=`date +'%Y%m%d%H%M%S'`
+if [ "$NUM_CPUS" = "" ]; then
+	NUM_CPUS=1
+fi
 
 if [ "$PLATFORM" = "win32" ]; then
 	DRILLBIT_APP=Drillbit
