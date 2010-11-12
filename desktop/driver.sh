@@ -37,5 +37,9 @@ TIMESTAMP_NAME=build/$PLATFORM/dist/sdk-$VERSION-$TIMESTAMP-$PLATFORM.zip
 mv build/$PLATFORM/dist/sdk-$VERSION.zip $TIMESTAMP_NAME
 
 #SHA1=`shasum $TIMESTAMP_NAME | sed 's/ .*//' | tr -d '\n' | tr -d '\r'`
-python $TITANIUM_BUILD/common/s3_cleaner.py desktop $GIT_BRANCH
-python $TITANIUM_BUILD/common/s3_uploader.py desktop $TIMESTAMP_NAME $GIT_BRANCH $GIT_REVISION $BUILD_URL
+if [ "$PYTHON" = ""]; then
+	PYTHON=python
+fi
+
+$PYTHON $TITANIUM_BUILD/common/s3_cleaner.py desktop $GIT_BRANCH
+$PYTHON $TITANIUM_BUILD/common/s3_uploader.py desktop $TIMESTAMP_NAME $GIT_BRANCH $GIT_REVISION $BUILD_URL
