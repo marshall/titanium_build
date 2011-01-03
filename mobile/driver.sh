@@ -3,7 +3,7 @@
 # A hudson build driver for Titanium Mobile 
 
 export PATH=/bin:/usr/bin:$PATH
-scons package_all=1
+scons package_all=1 $TI_MOBILE_SCONS_ARGS
 
 GIT_BRANCH=$1
 GIT_REVISION=`git log --pretty=oneline -n 1 | sed 's/ .*//' | tr -d '\n' | tr -d '\r'`
@@ -15,7 +15,11 @@ mv dist/mobilesdk-$VERSION-osx.zip $BASENAME-osx.zip
 mv dist/mobilesdk-$VERSION-win32.zip $BASENAME-win32.zip
 mv dist/mobilesdk-$VERSION-linux.zip $BASENAME-linux.zip
 
-python $TITANIUM_BUILD/common/s3_cleaner.py mobile $GIT_BRANCH
-python $TITANIUM_BUILD/common/s3_uploader.py mobile $BASENAME-osx.zip $GIT_BRANCH $GIT_REVISION $BUILD_URL
-python $TITANIUM_BUILD/common/s3_uploader.py mobile $BASENAME-linux.zip $GIT_BRANCH $GIT_REVISION $BUILD_URL
-python $TITANIUM_BUILD/common/s3_uploader.py mobile $BASENAME-win32.zip $GIT_BRANCH $GIT_REVISION $BUILD_URL
+if [ "$PYTHON" = "" ]; then
+	PYTHON=python
+fi
+
+$PYTHON $TITANIUM_BUILD/common/s3_cleaner.py mobile $GIT_BRANCH
+$PYTHON $TITANIUM_BUILD/common/s3_uploader.py mobile $BASENAME-osx.zip $GIT_BRANCH $GIT_REVISION $BUILD_URL
+$PYTHON $TITANIUM_BUILD/common/s3_uploader.py mobile $BASENAME-linux.zip $GIT_BRANCH $GIT_REVISION $BUILD_URL
+$PYTHON $TITANIUM_BUILD/common/s3_uploader.py mobile $BASENAME-win32.zip $GIT_BRANCH $GIT_REVISION $BUILD_URL
